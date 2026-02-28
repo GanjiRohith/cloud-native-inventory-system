@@ -61,8 +61,12 @@ jobs:
     
     - name: Verify no hardcoded secrets
       run: |
-        if grep -r "password\s*=" src/ | grep -v "password_hash" | grep -v "#"; then
+        if grep -rE "password\s*=\s*['\"]" src/ | grep -v "password_hash" | grep -v "#"; then
           echo "❌ Found hardcoded passwords!"
+          exit 1
+        fi
+        if grep -rE "api_key\s*=\s*['\"]" src/ | grep -v "#"; then
+          echo "❌ Found hardcoded API keys!"
           exit 1
         fi
         echo "✅ No hardcoded secrets found"
