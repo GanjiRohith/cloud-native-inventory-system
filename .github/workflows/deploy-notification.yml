@@ -1,0 +1,32 @@
+name: Deploy Notification
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-ready:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Generate deployment summary
+      run: |
+        echo "✅ Deployment Ready!"
+        echo "Repository: $GITHUB_REPOSITORY"
+        echo "Branch: $GITHUB_REF"
+        echo "Commit: $GITHUB_SHA"
+        echo "Author: $GITHUB_ACTOR"
+        echo ""
+        echo "To deploy locally:"
+        echo "1. git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+        echo "2. cd cloud-native-inventory-system"
+        echo "3. cp .env.example .env"
+        echo "4. docker-compose up --build"
+        echo ""
+        echo "Services available:"
+        echo "- Flask API: http://localhost:5000"
+        echo "- MySQL: localhost:3306"
+        echo "- MongoDB: localhost:27017"
+
