@@ -1,0 +1,56 @@
+services:
+
+  flaskapp:
+    build: .
+    container_name: flask_inventory
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+      - mongo
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DB: inventory
+      MONGO_URI: mongodb://mongo:27017
+    volumes:
+      - .:/app
+    networks:
+      - inventory_net
+
+
+  mysql:
+    image: mysql:8
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: inventory
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - inventory_net
+
+
+  mongo:
+    image: mongo:7
+    container_name: mongo_db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - inventory_net
+
+
+volumes:
+  mysql_data:
+  mongo_data:
+
+
+networks:
+  inventory_net:
